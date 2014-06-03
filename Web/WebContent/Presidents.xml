@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Presidents>
+	<President id="GeorgeWashington">
+		<Name>George Washington</Name>
+		<Bio>
+			<Para>On April 30, 1789, George Washington, standing on the balcony of Federal Hall on Wall Street in New York, took his oath of office as the first President of the United States. "As the first of every thing, in our situation will serve to establish a Precedent," he wrote James Madison, "it is devoutly wished on my part, that these precedents may be fixed on true principles." </Para>
+			<Para>Born in 1732 into a Virginia planter family, he learned the morals, manners, and body of knowledge requisite for an 18th century Virginia gentleman.</Para>
+		</Bio>
+		<ImgPath>georgewashington.jpg</ImgPath>
+	</President>
+	<President id="JohnAdams">
+		<Name>John Adams</Name>
+		<Bio>
+			<Para>Learned and thoughtful, John Adams was more remarkable as a political philosopher than as a politician. "People and nations are forged in the fires of adversity," he said, doubtless thinking of his own as well as the American experience.</Para>
+			<Para>Adams was born in the Massachusetts Bay Colony in 1735. A Harvard-educated lawyer, he early became identified with the patriot cause; a delegate to the First and Second Continental Congresses, he led in the movement for independence.</Para>
+		</Bio>
+		<ImgPath>johnadams.jpg</ImgPath>
+	</President>
+</Presidents>

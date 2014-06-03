@@ -1,0 +1,100 @@
+<html>
+
+<head>
+<title>Presidents</title>
+<link rel="stylesheet" type="text/css" href="Presidents.css">
+<script language="javascript" src="DOM.js"></script>
+<script language="javascript">
+	function CreateMessageBox(e)
+	{
+		if (!e) e = window.event;
+		var target = e.target || e.srcElement;
+		var id = target.id;
+		var msgContainer = document.getElementById("MessageBoxes");
+
+		/*
+			Load the Presidents.xml document into an xmlDoc variable.  Set the asynchronous flag to false.
+			Use the RemoveTextNodes() function in the DOM.js library to remove all whitespace-only nodes.
+			Read all the President tags as a nodeList into a presidents variable.
+			
+			Pass the node from the presidents nodeList whose id attribute matches the variable defined above to the GetTitleText() and GetBodyParas() functions and store the results in txtTitle and nlParas attributes. (Hint: you will need to loop through the nodeList).
+		*/
+		
+		var xmlDoc = DomDoc("Presidents.xml",false);
+		RemoveTextNodes(xmlDoc,true);
+		var presidents = xmlDoc.getElementsByTagName("President");
+		
+		for (var i=0; i < presidents.length; i++)
+		{
+			if (presidents[i].getAttribute("id")==id)
+			{
+				var txtTitle = GetTitleText(presidents[i]);
+				var nlParas = GetBodyParas(presidents[i]);
+				break;
+			}
+		}	
+		
+		var msgBox = AddChild(document, msgContainer, "div");
+		var msgTitle = AddChild(document, msgBox, "h1",txtTitle);
+		msgTitle.className = "PresTitle";
+		
+		var msgBodyPara;
+		
+		/*
+			Append a p tag to msgBox for each Para node in the nlParas nodeList.  The text of the p tag should be the same as the text of the Para element of the original XML document.
+			Set className of new p element to "PresBodyPara".
+		*/
+		for (var i=0; i < nlParas.length; i++)
+		{	
+			msgBodyPara = AddChild(document, msgBox,"p",nlParas[i].firstChild.nodeValue);
+			msgBodyPara.className = "PresBodyPara";
+		}
+	}
+	
+	function Inactivate(e)
+	{
+		if (!e) e = window.event;
+		var target = e.target || e.srcElement;
+		target.disabled=true;
+	}
+	
+	/*
+		This function returns the text inside 
+		the Name element of the President element
+	*/
+	function GetTitleText(NODE)
+	{
+		return NODE.firstChild.firstChild.nodeValue;
+	}
+	
+	/*
+		This function returns a nodeList of Para elements
+		inside the President element
+	*/
+	function GetBodyParas(NODE)
+	{
+		return NODE.childNodes[1].getElementsByTagName("Para");
+	}
+	
+	function init()
+	{
+		var buttons=GetElementsByClassName("btn");
+		for (var i=0; i < buttons.length; i++)
+		{
+			AttachEvent(buttons[i],"click",CreateMessageBox);
+			AttachEvent(buttons[i],"click",Inactivate);
+		}
+	}
+	
+	window.onload = init;
+</script>
+</head>
+
+<body>
+<form onSubmit="return false">
+	<input class="btn" type="button" id="GeorgeWashington" value="George Washington" />
+	<input class="btn" type="button" id="JohnAdams" value="John Adams" />
+</form>
+<div id="MessageBoxes"></div>
+</body>
+</html>

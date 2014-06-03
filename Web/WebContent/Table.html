@@ -1,0 +1,103 @@
+<html>
+
+<head>
+<title>Dynamic Table</title>
+<link rel="stylesheet" type="text/css" href="Table.css">
+<script language="javascript" src="prototype.js"></script>
+<script src="DOM.js" language="javascript"></script>
+<script language="javascript">
+	var MainTable, TableDataSrc, RowElement, ColumnNames, ColumnWidths;
+	
+	MainTable = "MainTable";
+		
+	function GetRows()
+	{
+		new Ajax.Request(TableDataSrc, 
+			{
+				method: "get",
+				onComplete: ShowResult
+			});
+	}
+			
+	function BuildTable(TABLE) /* add in a TABLE argument */
+	{
+	  /* add code to set the variables based on the table passed in */
+	  switch (TABLE)
+        {
+          case "Employees" :
+            TableDataSrc = "Employees.jsp";
+            RowElement = "Employee";
+            ColumnNames = new Array("Salesperson","Title","Birth Date","Hire Date","Extension");
+            ColumnWidths = new Array(24,24,21,21,8);
+            break;
+          case "Orders" :
+            TableDataSrc = "Orders.jsp";
+            RowElement = "Order";
+            ColumnNames = new Array("Salesperson","Customer","Order ID","Order Date");
+            ColumnWidths = new Array(29,34,14,23);
+            break;
+        }
+		RemoveAllChildren(document.getElementById("HeaderRow"));
+		RemoveAllChildren(document.getElementById("BodyRows"));
+		CreateHeaderRow();
+		GetRows();
+	}
+	
+	function CreateHeaderRow()
+	{
+		var HeaderRow = document.getElementById("HeaderRow");
+		
+		for (var i=0; i<ColumnNames.length; i++)
+		{
+			var width=ColumnWidths[i];
+			var atts = new Object();
+			atts["width"] = width+"%";
+			AddChild(document, HeaderRow, "th", ColumnNames[i], atts);
+		}
+	}
+	
+	function ShowResult(REQ)
+	{
+		var xmlDoc = REQ.responseXML.documentElement;
+		RemoveTextNodes(xmlDoc,true);
+		
+		var OutputResult = document.getElementById("BodyRows");
+		var RowData = xmlDoc.getElementsByTagName(RowElement);
+		AddTableRowsFromXmlDoc(RowData,OutputResult);
+		document.getElementById(MainTable).style.display = "";
+	}
+	
+	function AddTableRowsFromXmlDoc(XmlNodes,TableNode)
+	{
+		for (i=0; i<XmlNodes.length; i++)
+		{
+			var newRow = AddChild(document, TableNode, "tr");
+			
+			if (i%2==0)
+				newRow.className = "EvenRow";
+			else
+				newRow.className = "OddRow";
+			
+			for (j=0; j<XmlNodes[i].childNodes.length; j++)
+			{
+				AddChild(document, newRow, "td", decodeURIComponent(XmlNodes[i].childNodes[j].firstChild.nodeValue));
+			}
+		}
+	}
+</script>
+</head>
+
+<body>
+<a href="javascript:void(0);" onClick="BuildTable('Employees')">Employees</a>
+<!--  add in a link for Orders -->
+<a href="javascript:void(0);" onClick="BuildTable('Orders')">Orders</a>
+<div id="divBody">
+<table border="1" width="780" cellpadding="2" cellspacing="0"
+	id="MainTable" align="center" style="display: none">
+	<thead>
+		<tr id="HeaderRow"></tr>
+	</thead>
+	<tbody id="BodyRows"></tbody>
+</table>
+</div>
+</html>
